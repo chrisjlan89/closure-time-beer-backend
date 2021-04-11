@@ -1,9 +1,8 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+  scalar Date
 
-  # This "Book" type defines the queryable fields for every book in our data source.
   type Brewery {
     name: String
     brewery_type: String
@@ -15,17 +14,56 @@ const typeDefs = gql`
     county_province: String
     postal_code: String
     country: String
-    longitude: Int
-    latitude: Int
+    lng: Float
+    lat: Float
     phone: Int
     website_url: String
+    formatted_address: String
+    place_id: String
+    user_ratings_total: Int
+    business_status: String
+    price_level: Int
+    rating: Float
+
+    opening_hours: OpeningHours
+    photos: BreweryPhotos
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  type OpeningHours {
+    open_now: String
+    periods: [HoursObj]
+    weekday_text: [String]
+  }
+
+  type HoursObj {
+    close: Close
+    open: Open
+  }
+
+  type Open {
+    day: Int
+    time: String
+  }
+
+  type Close {
+    day: Int
+    time: String
+  }
+
+  type BreweryPhotos {
+    html_attributions: [String]
+    photo_reference: String
+    height: Int
+    width: Int
+  }
+
   type Query {
     allBreweries: [Brewery]
+    allBreweriesFilterApplied(postal_code: String, state: String): [Brewery]
+  }
+
+  type Mutation {
+    addBrewery: [Brewery]
   }
 `;
 
